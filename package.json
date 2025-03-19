@@ -3,7 +3,8 @@
 	"version": "1.0.0",
 	"description": "A PHP application for Spotify playlist export",
 	"scripts": {
-		"test": "composer test"
+		"test": "composer test",
+		"start": "php -S localhost:8000"
 	},
 	"private": true
 }
