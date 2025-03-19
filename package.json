@@ -1,0 +1,9 @@
+{
+	"name": "spotify-playlist-export",
+	"version": "1.0.0",
+	"description": "A PHP application for Spotify playlist export",
+	"scripts": {
+		"test": "composer test"
+	},
+	"private": true
+}
