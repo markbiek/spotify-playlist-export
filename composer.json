@@ -1,5 +1,5 @@
 {
-	"name": "spotify-playlist-export",
+	"name": "mark/spotify-playlist-export",
 	"description": "A PHP application for Spotify playlist export",
 	"type": "project",
 	"autoload": {
