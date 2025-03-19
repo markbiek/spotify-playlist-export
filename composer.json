@@ -1,0 +1,13 @@
+{
+	"name": "spotify-playlist-export",
+	"description": "A PHP application for Spotify playlist export",
+	"type": "project",
+	"autoload": {
+		"psr-4": {
+			"App\\": "src/"
+		}
+	},
+	"require": {
+		"php": ">=8.2"
+	}
+}
