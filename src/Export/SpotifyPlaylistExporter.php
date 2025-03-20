@@ -64,12 +64,12 @@ class SpotifyPlaylistExporter {
 	/**
 	 * Export a single playlist.
 	 *
-	 * @param array $playlist The playlist to export
+	 * @param \stdClass $playlist The playlist to export
 	 * @param string $exportDir The directory to export the playlist to
 	 */
-	public function exportPlaylist(array $playlist, string $exportDir) {
-		$playlistId = $playlist['id'];
-		$playlistName = $playlist['name'];
+	public function exportPlaylist(\stdClass $playlist, string $exportDir) {
+		$playlistId = $playlist->id;
+		$playlistName = $playlist->name;
 		$playlistCleanName = preg_replace('/-+/', '-', preg_replace('/[^a-zA-Z0-9]/', '-', $playlistName));
 
 		// Get all tracks from the playlist
