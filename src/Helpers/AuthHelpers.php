@@ -10,27 +10,29 @@ function loadAndVerifyAuthToken(): SpotifyWebAPI {
 
 	try {
 		$api = $auth->getApi();
-		$auth->setAccessToken($_SESSION['spotify_access_token']);
 		
-		// Verify the token still works
-		$api->me();
-		
-		// Token is valid, continue to main application
-		return $api;
-	} catch (Exception $e) {
-		// Token might be expired, try to refresh if we have a refresh token
+		// If we have a refresh token, always try to get a fresh access token
 		if (isset($_SESSION['spotify_refresh_token'])) {
 			if ($auth->refreshAccessToken($_SESSION['spotify_refresh_token'])) {
-				// Store the new access token
 				$_SESSION['spotify_access_token'] = $auth->getAccessToken();
-				
-				// Redirect to refresh the page with new token
-				header('Location: ' . $_SERVER['PHP_SELF']);
-				exit;
+				$api->setAccessToken($_SESSION['spotify_access_token']);
+				return $api;
 			}
 		}
-		
-		// If we get here, refresh failed or we had no refresh token
+
+		// If no refresh token or refresh failed, try the existing access token
+		if (isset($_SESSION['spotify_access_token'])) {
+			$auth->setAccessToken($_SESSION['spotify_access_token']);
+			
+			// Verify the token works
+			$api->me();
+			return $api;
+		}
+
+		// If we get here, we have no valid tokens
+		throw new Exception('No valid authentication tokens available');
+	} catch (Exception $e) {
+		// Clear invalid tokens
 		unset($_SESSION['spotify_access_token']);
 		unset($_SESSION['spotify_refresh_token']);
 
