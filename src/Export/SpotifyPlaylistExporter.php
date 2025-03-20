@@ -51,7 +51,7 @@ class SpotifyPlaylistExporter {
 	public function exportAllPlaylists() {
 		$timestamp = date('Y-m-d_H-i-s');
 		$exportDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'spotify_export_' . $timestamp;
-		
+
 		if (!mkdir($exportDir, 0755, true)) {
 			throw new \RuntimeException('Failed to create export directory.');
 		}
