@@ -6,6 +6,11 @@
 	<div class="dashboard">
 		<h1>Welcome, {{ user.display_name }}</h1>
 
+		<form method="post" action="">
+			<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+			<button type="submit" class="export-button">Export All Playlists</button>
+		</form>
+
 		<h2>Your Playlists</h2>
 		<ul class="playlist-list">
 			{% for playlist in playlists %}

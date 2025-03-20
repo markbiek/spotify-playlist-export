@@ -23,6 +23,8 @@ use Twig\Loader\FilesystemLoader;
 
 use function App\Helpers\loadAndVerifyAuthToken;
 use function App\Helpers\generateTokensFromAuth;
+use function App\Helpers\generateCsrfToken;
+use function App\Helpers\validateCsrfToken;
 
 // Load configuration
 $config = include_once __DIR__ . '/config.php';
@@ -77,7 +79,18 @@ $userData = $api->me();
 $playlistHelper = new SpotifyPlaylistHelper($api, $userData);
 $playlists = $playlistHelper->getSortedPlaylists();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	// Validate CSRF token before processing the export
+	if (!validateCsrfToken($_POST['csrf_token'] ?? null)) {
+		http_response_code(403);
+		die();
+	}
+
+	// TODO: Process the export
+}
+
 echo $twig->render('dashboard.twig', [
 	'user' => $userData,
-	'playlists' => $playlists
+	'playlists' => $playlists,
+	'csrf_token' => generateCsrfToken()
 ]);
