@@ -7,17 +7,15 @@
 		<h1>Welcome, {{ user.display_name }}</h1>
 
 		<h2>Your Playlists</h2>
-		<ul style="list-style: none; padding: 0;">
+		<ul class="playlist-list">
 			{% for playlist in playlists %}
-				<li style="display: flex; align-items: center; margin-bottom: 10px;">
+				<li class="playlist-item">
 					{% if playlist.images|length > 0 %}
-						<img src="{{ playlist.images|last.url }}" 
-							alt="{{ playlist.name }} cover" 
-							width="64" 
-							height="64" 
-							style="margin-right: 10px;">
+						<img class="playlist-cover"
+							src="{{ playlist.images|last.url }}" 
+							alt="{{ playlist.name }} cover">
 					{% endif %}
-					{{ playlist.name }}
+					<span class="playlist-name">{{ playlist.name }}</span>
 				</li>
 			{% endfor %}
 		</ul>
