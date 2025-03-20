@@ -1,0 +1,12 @@
+{% extends "base.twig" %}
+
+{% block title %}Dashboard - Spotify Playlist Export{% endblock %}
+
+{% block content %}
+	<div class="dashboard">
+		<h1>Welcome, {{ user.display_name }}</h1>
+		<pre>
+			{{ dump(user) }}
+		</pre>
+	</div>
+{% endblock %} 

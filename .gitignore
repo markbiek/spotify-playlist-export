@@ -2,3 +2,5 @@ vendor/
 node_modules/
 .phpunit.cache/
 .env
+cache/twig/*
+!cache/twig/.gitkeep

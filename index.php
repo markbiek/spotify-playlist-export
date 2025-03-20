@@ -17,6 +17,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 session_start();
 
 use App\Auth\SpotifyAuthHandler;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 use function App\Helpers\loadAndVerifyAuthToken;
 use function App\Helpers\generateTokensFromAuth;
@@ -24,13 +26,22 @@ use function App\Helpers\generateTokensFromAuth;
 // Load configuration
 $config = include_once __DIR__ . '/config.php';
 
-// Set error reporting based on environment
+// Initialize Twig
+$loader = new FilesystemLoader(__DIR__ . '/templates');
+$twig = new Environment($loader, [
+	'cache' => __DIR__ . '/cache/twig',
+	'debug' => $config['app']['debug']
+]);
+
+error_reporting(0);
+ini_set('display_errors', '0');
+
 if ($config['app']['debug']) {
     error_reporting(E_ALL);
     ini_set('display_errors', '1');
-} else {
-    error_reporting(0);
-    ini_set('display_errors', '0');
+
+	// Add the debug extension
+	$twig->addExtension(new \Twig\Extension\DebugExtension());
 }
 
 // Check if we already have an access token
@@ -59,4 +70,5 @@ if (isset($_SESSION['spotify_access_token'])) {
 	exit;
 }
 
-echo '<pre>' . print_r( $api->me(), true ) . '</pre>';
+$userData = $api->me();
+echo $twig->render('dashboard.twig', ['user' => $userData]);
