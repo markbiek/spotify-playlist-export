@@ -71,4 +71,15 @@ if (isset($_SESSION['spotify_access_token'])) {
 }
 
 $userData = $api->me();
-echo $twig->render('dashboard.twig', ['user' => $userData]);
+$playlistsData = $api->getUserPlaylists($userData->id);
+
+// Create array of playlists and sort by name
+$playlists = array_values((array) $playlistsData->items);
+usort($playlists, function($a, $b) {
+	return strcasecmp($a->name, $b->name);
+});
+
+echo $twig->render('dashboard.twig', [
+	'user' => $userData,
+	'playlists' => $playlists
+]);
