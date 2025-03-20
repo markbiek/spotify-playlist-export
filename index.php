@@ -17,6 +17,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 session_start();
 
 use App\Auth\SpotifyAuthHandler;
+use App\Helpers\SpotifyPlaylistHelper;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -71,13 +72,10 @@ if (isset($_SESSION['spotify_access_token'])) {
 }
 
 $userData = $api->me();
-$playlistsData = $api->getUserPlaylists($userData->id);
 
-// Create array of playlists and sort by name
-$playlists = array_values((array) $playlistsData->items);
-usort($playlists, function($a, $b) {
-	return strcasecmp($a->name, $b->name);
-});
+// Use SpotifyPlaylistHelper to get sorted playlists
+$playlistHelper = new SpotifyPlaylistHelper($api, $userData);
+$playlists = $playlistHelper->getSortedPlaylists();
 
 echo $twig->render('dashboard.twig', [
 	'user' => $userData,
