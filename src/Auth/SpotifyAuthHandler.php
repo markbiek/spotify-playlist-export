@@ -16,6 +16,7 @@ namespace App\Auth;
 
 use SpotifyWebAPI\Session;
 use SpotifyWebAPI\SpotifyWebAPI;
+use Exception;
 
 /**
  * Handles Spotify authentication flow.
@@ -128,5 +129,33 @@ class SpotifyAuthHandler
     public function setAccessToken(string $token): void
     {
         $this->_api->setAccessToken($token);
+    }
+
+    /**
+     * Get the current refresh token from the session.
+     *
+     * @return string|null Refresh token if available.
+     */
+    public function getRefreshToken(): ?string
+    {
+        return $this->_session->getRefreshToken();
+    }
+
+    /**
+     * Refresh the access token using the refresh token.
+     *
+     * @param string $refreshToken The refresh token to use.
+     * 
+     * @return bool True if refresh was successful.
+     */
+    public function refreshAccessToken(string $refreshToken): bool
+    {
+        try {
+            $this->_session->refreshAccessToken($refreshToken);
+            $this->_api->setAccessToken($this->_session->getAccessToken());
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 } 

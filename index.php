@@ -44,10 +44,25 @@ if (isset($_SESSION['spotify_access_token'])) {
 		$api->me();
 		
 		// Token is valid, continue to main application
+		echo "Already authenticated!";
+		// TODO: Add your main application logic here
+		
 	} catch (Exception $e) {
-		// TODO: Refresh the token
-		// Token might be expired or invalid
+		// Token might be expired, try to refresh if we have a refresh token
+		if (isset($_SESSION['spotify_refresh_token'])) {
+			if ($auth->refreshAccessToken($_SESSION['spotify_refresh_token'])) {
+				// Store the new access token
+				$_SESSION['spotify_access_token'] = $auth->getAccessToken();
+				
+				// Redirect to refresh the page with new token
+				header('Location: ' . $_SERVER['PHP_SELF']);
+				exit;
+			}
+		}
+		
+		// If we get here, refresh failed or we had no refresh token
 		unset($_SESSION['spotify_access_token']);
+		unset($_SESSION['spotify_refresh_token']);
 		header('Location: ' . $_SERVER['PHP_SELF']);
 		exit;
 	}
@@ -56,6 +71,7 @@ if (isset($_SESSION['spotify_access_token'])) {
 	try {
 		$api = $auth->handleCallback($_GET['code']);
 		$_SESSION['spotify_access_token'] = $auth->getAccessToken();
+		$_SESSION['spotify_refresh_token'] = $auth->getRefreshToken();
 		
 		// Redirect to clean URL
 		header('Location: ' . $_SERVER['PHP_SELF']);
