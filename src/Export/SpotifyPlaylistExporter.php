@@ -49,8 +49,15 @@ class SpotifyPlaylistExporter {
 	 * Export all playlists.
 	 */
 	public function exportAllPlaylists() {
+		$timestamp = date('Y-m-d_H-i-s');
+		$exportDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'spotify_export_' . $timestamp;
+		
+		if (!mkdir($exportDir, 0755, true)) {
+			throw new \RuntimeException('Failed to create export directory.');
+		}
+
 		foreach ($this->playlists as $playlist) {
-			$this->exportPlaylist($playlist);
+			$this->exportPlaylist($playlist, $exportDir);
 		}
 	} 
 
@@ -58,8 +65,9 @@ class SpotifyPlaylistExporter {
 	 * Export a single playlist.
 	 *
 	 * @param array $playlist The playlist to export
+	 * @param string $exportDir The directory to export the playlist to
 	 */
-	public function exportPlaylist(array $playlist) {
+	public function exportPlaylist(array $playlist, string $exportDir) {
 		$playlistId = $playlist['id'];
 		$playlistName = $playlist['name'];
 		$playlistCleanName = preg_replace('/-+/', '-', preg_replace('/[^a-zA-Z0-9]/', '-', $playlistName));
@@ -67,6 +75,16 @@ class SpotifyPlaylistExporter {
 		// Get all tracks from the playlist
 		$tracks = $this->api->getPlaylistTracks($playlistId);
 
-		// TODO: Process the tracks
+		// Convert tracks to JSON
+		$jsonContent = json_encode($tracks, JSON_PRETTY_PRINT);
+		if ($jsonContent === false) {
+			throw new \RuntimeException('Failed to encode playlist tracks to JSON.');
+		}
+
+		// Write JSON to file
+		$filePath = $exportDir . DIRECTORY_SEPARATOR . $playlistCleanName . '.json';
+		if (file_put_contents($filePath, $jsonContent) === false) {
+			throw new \RuntimeException('Failed to write playlist tracks to file.');
+		}
 	}
 }
