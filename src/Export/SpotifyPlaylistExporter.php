@@ -62,6 +62,7 @@ class SpotifyPlaylistExporter {
 	public function exportPlaylist(array $playlist) {
 		$playlistId = $playlist['id'];
 		$playlistName = $playlist['name'];
+		$playlistCleanName = preg_replace('/-+/', '-', preg_replace('/[^a-zA-Z0-9]/', '-', $playlistName));
 
 		// Get all tracks from the playlist
 		$tracks = $this->api->getPlaylistTracks($playlistId);
