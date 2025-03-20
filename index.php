@@ -44,9 +44,6 @@ if (isset($_SESSION['spotify_access_token'])) {
 		$api->me();
 		
 		// Token is valid, continue to main application
-		echo "Already authenticated!";
-		// TODO: Add your main application logic here
-		
 	} catch (Exception $e) {
 		// Token might be expired, try to refresh if we have a refresh token
 		if (isset($_SESSION['spotify_refresh_token'])) {
@@ -93,6 +90,4 @@ if (isset($_SESSION['spotify_access_token'])) {
 	exit;
 }
 
-// Initialize your application here
-// TODO: Add application initialization code 
 echo '<pre>' . print_r( $api->me(), true ) . '</pre>';
