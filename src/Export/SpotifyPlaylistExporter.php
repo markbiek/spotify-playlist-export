@@ -44,4 +44,28 @@ class SpotifyPlaylistExporter {
 		$this->api = $api;
 		$this->playlists = $playlists;
 	}
-} 
+
+	/**
+	 * Export all playlists.
+	 */
+	public function exportAllPlaylists() {
+		foreach ($this->playlists as $playlist) {
+			$this->exportPlaylist($playlist);
+		}
+	} 
+
+	/**
+	 * Export a single playlist.
+	 *
+	 * @param array $playlist The playlist to export
+	 */
+	public function exportPlaylist(array $playlist) {
+		$playlistId = $playlist['id'];
+		$playlistName = $playlist['name'];
+
+		// Get all tracks from the playlist
+		$tracks = $this->api->getPlaylistTracks($playlistId);
+
+		// TODO: Process the tracks
+	}
+}

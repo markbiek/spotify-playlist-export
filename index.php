@@ -18,6 +18,7 @@ session_start();
 
 use App\Auth\SpotifyAuthHandler;
 use App\Helpers\SpotifyPlaylistHelper;
+use App\Export\SpotifyPlaylistExporter;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -86,7 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		die();
 	}
 
-	// TODO: Process the export
+	$exporter = new SpotifyPlaylistExporter($api, $playlists);
+	$exporter->exportAllPlaylists();
+
+	exit;
 }
 
 echo $twig->render('dashboard.twig', [
