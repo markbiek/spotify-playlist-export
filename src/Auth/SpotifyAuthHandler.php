@@ -97,4 +97,36 @@ class SpotifyAuthHandler
 
         return $this->_api;
     }
+
+    /**
+     * Get the API instance.
+     *
+     * @return SpotifyWebAPI
+     */
+    public function getApi(): SpotifyWebAPI
+    {
+        return $this->_api;
+    }
+
+    /**
+     * Get the current access token from the session.
+     *
+     * @return string|null Access token if available.
+     */
+    public function getAccessToken(): ?string
+    {
+        return $this->_session->getAccessToken();
+    }
+
+    /**
+     * Set an access token for the API.
+     *
+     * @param string $token Access token to set.
+     * 
+     * @return void
+     */
+    public function setAccessToken(string $token): void
+    {
+        $this->_api->setAccessToken($token);
+    }
 } 

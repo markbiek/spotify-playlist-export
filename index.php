@@ -3,6 +3,8 @@
 /**
  * Application entry point.
  * 
+ * PHP version 8.2
+ *
  * @category Bootstrap
  * @package  SpotifyPlaylistExport
  * @author   Application Developer <developer@example.com>
@@ -26,32 +28,55 @@ if ($config['app']['debug']) {
     ini_set('display_errors', '0');
 }
 
+// Start the session
+session_start();
+
 // Initialize Spotify authentication
 $auth = new SpotifyAuthHandler();
 
-// If we have a code in the URL, handle the callback
-if (isset($_GET['code'])) {
-    try {
-        $api = $auth->handleCallback($_GET['code']);
-        // Successfully authenticated, you can now use $api to make requests
-        $me = $api->me();
-        echo "Logged in as: " . htmlspecialchars($me->display_name);
-
-		echo '<pre>' . print_r($me, true) . '</pre>';
-    } catch (Exception $e) {
-        echo "Error during authentication: " . htmlspecialchars($e->getMessage());
-    }
+// Check if we already have an access token
+if (isset($_SESSION['spotify_access_token'])) {
+	try {
+		$api = $auth->getApi();
+		$auth->setAccessToken($_SESSION['spotify_access_token']);
+		
+		// Verify the token still works
+		$api->me();
+		
+		// Token is valid, continue to main application
+	} catch (Exception $e) {
+		// TODO: Refresh the token
+		// Token might be expired or invalid
+		unset($_SESSION['spotify_access_token']);
+		header('Location: ' . $_SERVER['PHP_SELF']);
+		exit;
+	}
+} elseif (isset($_GET['code'])) {
+	// Handle the callback from Spotify
+	try {
+		$api = $auth->handleCallback($_GET['code']);
+		$_SESSION['spotify_access_token'] = $auth->getAccessToken();
+		
+		// Redirect to clean URL
+		header('Location: ' . $_SERVER['PHP_SELF']);
+		exit;
+		
+	} catch (Exception $e) {
+		echo "Error during authentication: " . htmlspecialchars($e->getMessage());
+		exit;
+	}
 } else {
-    // Request authorization from user
-    $scopes = [
-        'user-read-email',
-        'playlist-read-private',
-        'playlist-read-collaborative'
-    ];
-    
-    header('Location: ' . $auth->getAuthorizationUrl($scopes));
-    exit;
+	// Request authorization from user
+	$scopes = [
+		'user-read-email',
+		'playlist-read-private',
+		'playlist-read-collaborative'
+	];
+	
+	header('Location: ' . $auth->getAuthorizationUrl($scopes));
+	exit;
 }
 
 // Initialize your application here
 // TODO: Add application initialization code 
+echo '<pre>' . print_r( $api->me(), true ) . '</pre>';
