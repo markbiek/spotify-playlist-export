@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use SpotifyWebAPI\Session;
 use SpotifyWebAPI\SpotifyWebAPI;
 use Illuminate\Support\Facades\Log;
+use App\Models\SpotifyPlaylistExport;
 
 class DashboardController extends Controller
 {
@@ -16,6 +17,7 @@ class DashboardController extends Controller
 	{
 		$hasSpotifyToken = session()->has('spotify_access_token');
 		$userData = null;
+		$unfinishedExports = [];
 
 		if ($hasSpotifyToken) {
 			$api = new SpotifyWebAPI();
@@ -28,6 +30,12 @@ class DashboardController extends Controller
 					'profile_url' => $me->external_urls->spotify
 				];
 				Log::info('Spotify user data:', ['user' => $me]);
+
+				// Get unfinished exports for the current user
+				$unfinishedExports = SpotifyPlaylistExport::where('user_id', auth()->id())
+					->where('finished', false)
+					->orderBy('created_at', 'desc')
+					->get();
 			} catch (\Exception $e) {
 				Log::error('Error fetching Spotify user data:', ['error' => $e->getMessage()]);
 			}
@@ -35,7 +43,8 @@ class DashboardController extends Controller
 
 		return view('dashboard', [
 			'hasSpotifyToken' => $hasSpotifyToken,
-			'userData' => $userData
+			'userData' => $userData,
+			'unfinishedExports' => $unfinishedExports
 		]);
 	}
 }

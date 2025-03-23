@@ -18,6 +18,36 @@
                                 </a>
                             </div>
                         </div>
+
+						@if ($unfinishedExports->isEmpty())
+							<p class="text-center text-gray-600 pt-8">{{ __("No playlist exports in progress.") }}</p>
+						@else
+							<table class="w-full text-sm text-left rtl:text-right text-gray-500 mt-16">
+								<thead class="text-xs text-gray-700 uppercase bg-gray-50">
+									<tr>
+										<th scope="col" class="px-6 py-3">{{ __("Started") }}</th>
+										<th scope="col" class="px-6 py-3">{{ __("Progress") }}</th>
+										<th scope="col" class="px-6 py-3">{{ __("Status") }}</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach ($unfinishedExports as $export)
+										<tr class="bg-white border-b">
+											<td class="px-6 py-4">{{ $export->created_at->diffForHumans() }}</td>
+											<td class="px-6 py-4">
+												{{ $export->playlists_exported }} / {{ $export->playlist_count }}
+												({{ number_format(($export->playlists_exported / max(1, $export->playlist_count)) * 100, 1) }}%)
+											</td>
+											<td class="px-6 py-4">
+												<span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
+													{{ __("In Progress") }}
+												</span>
+											</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						@endif
                     @else
                         <div class="text-center">
                             <p class="mb-4">{{ __("We need to connect to your Spotify account.") }}</p>
