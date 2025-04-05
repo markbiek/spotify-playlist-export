@@ -20,7 +20,15 @@
                         </div>
 
 						@if ($unfinishedExports->isEmpty())
-							<p class="text-center text-gray-600 pt-8">{{ __("No playlist exports in progress.") }}</p>
+							<div class="text-center">
+								<p class="text-gray-600 pt-8 pb-4">{{ __("No playlist exports in progress.") }}</p>
+								<form method="POST" action="{{ route('playlists.export') }}">
+									@csrf
+									<button type="submit" class="bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold py-2 px-6 rounded border border-[#191414] shadow-sm">
+										{{ __("Start Export") }}
+									</button>
+								</form>
+							</div>
 						@else
 							<table class="w-full text-sm text-left rtl:text-right text-gray-500 mt-16">
 								<thead class="text-xs text-gray-700 uppercase bg-gray-50">
