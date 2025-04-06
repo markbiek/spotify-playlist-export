@@ -19,43 +19,68 @@
                             </div>
                         </div>
 
-						@if ($unfinishedExports->isEmpty())
-							<div class="text-center">
-								<p class="text-gray-600 pt-8 pb-4">{{ __("No playlist exports in progress.") }}</p>
-								<form method="POST" action="{{ route('playlists.export') }}">
-									@csrf
-									<button type="submit" class="bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold py-2 px-6 rounded border border-[#191414] shadow-sm">
-										{{ __("Start Export") }}
-									</button>
-								</form>
-							</div>
-						@else
-							<table class="w-full text-sm text-left rtl:text-right text-gray-500 mt-16">
-								<thead class="text-xs text-gray-700 uppercase bg-gray-50">
-									<tr>
-										<th scope="col" class="px-6 py-3">{{ __("Started") }}</th>
-										<th scope="col" class="px-6 py-3">{{ __("Progress") }}</th>
-										<th scope="col" class="px-6 py-3">{{ __("Status") }}</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach ($unfinishedExports as $export)
-										<tr class="bg-white border-b">
-											<td class="px-6 py-4">{{ $export->created_at->diffForHumans() }}</td>
-											<td class="px-6 py-4">
-												{{ $export->playlists_exported }} / {{ $export->playlist_count }}
-												({{ number_format(($export->playlists_exported / max(1, $export->playlist_count)) * 100, 1) }}%)
-											</td>
-											<td class="px-6 py-4">
-												<span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
-													{{ __("In Progress") }}
-												</span>
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
-						@endif
+                        @if ($unfinishedExports->isEmpty())
+                            <div class="text-center">
+                                <p class="text-gray-600 pt-8 pb-4">{{ __("No playlist exports in progress.") }}</p>
+                                <form method="POST" action="{{ route('playlists.export') }}">
+                                    @csrf
+                                    <button type="submit" class="bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold py-2 px-6 rounded border border-[#191414] shadow-sm">
+                                        {{ __("Start Export") }}
+                                    </button>
+                                </form>
+                            </div>
+                        @else
+                            <div class="mt-8">
+                                <h3 class="text-lg font-semibold mb-4">{{ __("Exports in Progress") }}</h3>
+                                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">{{ __("Started") }}</th>
+                                            <th scope="col" class="px-6 py-3">{{ __("Progress") }}</th>
+                                            <th scope="col" class="px-6 py-3">{{ __("Status") }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($unfinishedExports as $export)
+                                            <tr class="bg-white border-b">
+                                                <td class="px-6 py-4">{{ $export->created_at->diffForHumans() }}</td>
+                                                <td class="px-6 py-4">
+                                                    {{ $export->playlists_exported }} / {{ $export->playlist_count }}
+                                                    ({{ number_format(($export->playlists_exported / max(1, $export->playlist_count)) * 100, 1) }}%)
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
+                                                        {{ __("In Progress") }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+
+                        @if (!$completedExports->isEmpty())
+                            <div class="mt-8">
+                                <h3 class="text-lg font-semibold mb-4">{{ __("Completed Exports") }}</h3>
+                                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">{{ __("Date") }}</th>
+                                            <th scope="col" class="px-6 py-3">{{ __("Playlists") }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($completedExports as $export)
+                                            <tr class="bg-white border-b">
+                                                <td class="px-6 py-4">{{ $export->created_at->format('Y-m-d H:i:s') }}</td>
+                                                <td class="px-6 py-4">{{ $export->playlist_count }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
                     @else
                         <div class="text-center">
                             <p class="mb-4">{{ __("We need to connect to your Spotify account.") }}</p>

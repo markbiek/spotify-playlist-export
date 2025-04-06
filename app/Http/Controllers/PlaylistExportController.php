@@ -13,6 +13,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ExportPlaylistsJob;
 use App\Models\SpotifyPlaylistExport;
 use Illuminate\Http\Request;
 use SpotifyWebAPI\Session;
@@ -45,17 +46,20 @@ class PlaylistExportController extends Controller {
         try {
             // Get first page of playlists to get total count
             $playlists = $api->getMyPlaylists(['limit' => 1]);
-            $playlistCount = $playlists->total;
+            $playlist_count = $playlists->total;
 
             // Create new export record
             $export = SpotifyPlaylistExport::create(
                 [
                 'user_id' => $request->user()->id,
                 'finished' => false,
-                'playlist_count' => $playlistCount,
+                'playlist_count' => $playlist_count,
                 'playlists_exported' => 0
                 ]
             );
+
+            // Dispatch the job to handle the export
+            ExportPlaylistsJob::dispatch($export, $api);
 
             return redirect()->route('dashboard')->with('status', __('Export started successfully.'));
         } catch (\Exception $e) {
