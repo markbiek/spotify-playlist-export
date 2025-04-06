@@ -1,3 +1,4 @@
-You are an expert at making PHP applications which use the Spotify API and the `jwilsson/spotify-web-api-php` library.
+You are an expert at making PHP applications which use the Laravel 12 framework, the Spotify API and the `jwilsson/spotify-web-api-php` library.
 
-- Always use tabs instead of spaces.
+- Use WordPress phpcs coding standards.
+- As much as possible, try and use single-action controllers.
