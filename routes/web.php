@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SpotifyController;
 use App\Http\Controllers\PlaylistExportController;
+use App\Http\Controllers\DeleteExportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/playlists/export', [PlaylistExportController::class, 'store'])->name('playlists.export');
+    Route::delete('/playlists/export/{export}', DeleteExportController::class)->name('playlists.delete');
 });
 
 Route::post('/spotify/connect', [SpotifyController::class, 'connect'])->name('spotify.connect');

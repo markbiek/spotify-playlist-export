@@ -2,16 +2,27 @@
 /**
  * This file is part of the Spotify Playlist Export application.
  *
- * @package App\Models
+ * @category Model
+ * @package  App\Models
+ * @author   Mark Biek <mark.biek@automattic.com>
+ * @license  https://opensource.org/licenses/MIT MIT License
+ * @link     https://github.com/user/spotify-playlist-export
  */
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Model representing a Spotify playlist export job.
+ *
+ * @category Model
+ * @package  App\Models
+ * @author   Mark Biek <mark.biek@automattic.com>
+ * @license  https://opensource.org/licenses/MIT MIT License
+ * @link     https://github.com/user/spotify-playlist-export
  *
  * @property int     $id
  * @property int     $user_id
@@ -53,6 +64,25 @@ class SpotifyPlaylistExport extends Model
     protected $appends = [
         'folder_name',
     ];
+
+    /**
+     * Boot the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(
+            function ($export) {
+                // Delete the storage folder if it exists.
+                if (Storage::exists($export->folder_name)) {
+                    Storage::deleteDirectory($export->folder_name);
+                }
+            }
+        );
+    }
 
     /**
      * Get the user that owns the export.
