@@ -3,3 +3,4 @@ You are an expert at making PHP applications which use the Laravel 12 framework,
 - Use WordPress phpcs coding standards.
 - As much as possible, try and use single-action controllers.
 - Don't delete `<?php` tags at the beginning of *.php files.
+- When running artisan commands, always run them as `sail artisan <command>`
