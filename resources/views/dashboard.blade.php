@@ -77,6 +77,11 @@
                                                 <td class="px-6 py-4">{{ $export->created_at->format('Y-m-d H:i:s') }}</td>
                                                 <td class="px-6 py-4">{{ $export->playlist_count }}</td>
                                                 <td class="px-6 py-4">
+                                                    <a href="{{ route('playlists.download', $export) }}" class="text-green-600 hover:text-green-900 inline-block mr-2" title="Download Export" target="_blank" rel="noopener">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                                                        </svg>
+                                                    </a>
                                                     <form method="POST" action="{{ route('playlists.delete', $export) }}" class="inline">
                                                         @csrf
                                                         @method('DELETE')

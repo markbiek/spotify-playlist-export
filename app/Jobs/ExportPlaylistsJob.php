@@ -163,6 +163,9 @@ class ExportPlaylistsJob implements ShouldQueue {
         if (! is_dir($this->storage_path)) {
             mkdir($this->storage_path, 0755, true);
         }
+        // Save the folder name to the export model
+        $this->export->export_folder = $folder_name;
+        $this->export->save();
     }
 
     /**

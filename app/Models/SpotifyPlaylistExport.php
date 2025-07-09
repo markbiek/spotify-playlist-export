@@ -101,6 +101,9 @@ class SpotifyPlaylistExport extends Model
      */
     public function getFolderNameAttribute(): string
     {
+        if (!empty($this->export_folder)) {
+            return $this->export_folder;
+        }
         return sprintf(
             '%d-%s',
             $this->user_id,

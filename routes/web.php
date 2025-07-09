@@ -19,7 +19,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/playlists/export', [PlaylistExportController::class, 'store'])->name('playlists.export');
-    Route::delete('/playlists/export/{export}', DeleteExportController::class)->name('playlists.delete');
+    Route::delete('/exports/{export}', [DeleteExportController::class, '__invoke'])->middleware(['auth', 'verified'])->name('playlists.delete');
+    Route::get('/exports/{export}/download', [\App\Http\Controllers\DownloadExportController::class, '__invoke'])->middleware(['auth', 'verified'])->name('playlists.download');
 });
 
 Route::post('/spotify/connect', [SpotifyController::class, 'connect'])->name('spotify.connect');
