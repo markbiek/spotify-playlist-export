@@ -75,11 +75,19 @@ class SpotifyPlaylistExport extends Model
         parent::boot();
 
         static::deleting(
+            /**
+             * Handle the model "deleting" event.
+             * Deletes the export folder and the .zip file if they exist.
+             *
+             * @param SpotifyPlaylistExport $export The export being deleted.
+             * @return void
+             */
             function ($export) {
-                // Delete the storage folder if it exists.
-                if (Storage::exists($export->folder_name)) {
-                    Storage::deleteDirectory($export->folder_name);
-                }
+                // Delete the .zip file if it exists.
+				$zipPath = 'exports/' . $export->export_folder . '.zip';
+				if (Storage::exists($zipPath)) {
+					Storage::delete($zipPath);
+				}
             }
         );
     }
