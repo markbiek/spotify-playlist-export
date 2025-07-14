@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Storage;
  * @property bool    $finished
  * @property int     $playlist_count
  * @property int     $playlists_exported
+ * @property int     $total_batches
+ * @property int     $completed_batches
  * @property string  $folder_name
  */
 class SpotifyPlaylistExport extends Model
@@ -43,6 +45,8 @@ class SpotifyPlaylistExport extends Model
         'finished',
         'playlist_count',
         'playlists_exported',
+        'total_batches',
+        'completed_batches',
     ];
 
     /**
@@ -54,6 +58,8 @@ class SpotifyPlaylistExport extends Model
         'finished' => 'boolean',
         'playlist_count' => 'integer',
         'playlists_exported' => 'integer',
+        'total_batches' => 'integer',
+        'completed_batches' => 'integer',
     ];
 
     /**
@@ -63,6 +69,8 @@ class SpotifyPlaylistExport extends Model
      */
     protected $appends = [
         'folder_name',
+        'completion_percentage',
+        'batch_completion_percentage',
     ];
 
     /**
@@ -117,5 +125,31 @@ class SpotifyPlaylistExport extends Model
             $this->user_id,
             $this->created_at->format('YmdHis')
         );
+    }
+
+    /**
+     * Get the completion percentage for this export.
+     *
+     * @return float The completion percentage (0-100).
+     */
+    public function getCompletionPercentageAttribute(): float
+    {
+        if ($this->playlist_count === 0) {
+            return 0;
+        }
+        return round(($this->playlists_exported / $this->playlist_count) * 100, 2);
+    }
+
+    /**
+     * Get the batch completion percentage for this export.
+     *
+     * @return float The batch completion percentage (0-100).
+     */
+    public function getBatchCompletionPercentageAttribute(): float
+    {
+        if ($this->total_batches === 0) {
+            return 0;
+        }
+        return round(($this->completed_batches / $this->total_batches) * 100, 2);
     }
 }

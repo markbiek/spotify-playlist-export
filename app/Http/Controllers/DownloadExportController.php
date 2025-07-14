@@ -48,7 +48,7 @@ class DownloadExportController extends Controller
         $zipPath = storage_path('app/exports/' . $export->folder_name . '.zip');
 
         if (!file_exists($zipPath)) {
-            abort(404, __('Export file not found.'));
+            abort(404, __("Export file not found ({$zipPath})."));
         }
 
         $downloadName = 'spotify-playlists-' . $export->created_at->format('Ymd_His') . '.zip';

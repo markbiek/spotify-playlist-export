@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(brew services:*)"
+      "Bash(brew services:*)",
+      "Bash(sail artisan make:migration:*)",
+      "Bash(sail artisan make:job:*)",
+      "Bash(sail artisan:*)"
     ],
     "deny": []
   }
