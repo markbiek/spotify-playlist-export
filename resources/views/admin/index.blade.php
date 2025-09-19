@@ -39,10 +39,17 @@
                                             <td class="px-6 py-4">{{ $user->email }}</td>
                                             <td class="px-6 py-4">{{ $user->created_at->diffForHumans() }}</td>
                                             <td class="px-6 py-4">
-                                                <form method="POST" action="{{ route('admin.approve', $user) }}" class="inline">
+                                                <form method="POST" action="{{ route('admin.approve', $user) }}" class="inline mr-2">
                                                     @csrf
                                                     <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">
                                                         {{ __('Approve') }}
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ route('admin.delete', $user) }}" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm" onclick="return confirm('{{ __('Are you sure you want to delete user') }} {{ $user->name }}? {{ __('This action cannot be undone.') }}')">
+                                                        {{ __('Delete') }}
                                                     </button>
                                                 </form>
                                             </td>

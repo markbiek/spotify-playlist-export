@@ -26,4 +26,15 @@ class AdminController extends Controller
 
         return redirect()->route('admin.index')->with('success', 'User ' . $user->name . ' has been approved.');
     }
+
+    /**
+     * Delete a user.
+     */
+    public function deleteUser(User $user)
+    {
+        $userName = $user->name;
+        $user->delete();
+
+        return redirect()->route('admin.index')->with('success', 'User ' . $userName . ' has been deleted.');
+    }
 }
