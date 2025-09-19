@@ -4,7 +4,8 @@
       "Bash(brew services:*)",
       "Bash(sail artisan make:migration:*)",
       "Bash(sail artisan make:job:*)",
-      "Bash(sail artisan:*)"
+      "Bash(sail artisan:*)",
+      "Bash(php artisan make:migration:*)"
     ],
     "deny": []
   }
