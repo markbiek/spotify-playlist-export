@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::post('/admin/approve/{user}', [AdminController::class, 'approveUser'])->name('admin.approve');
 });
 
 Route::post('/spotify/connect', [SpotifyController::class, 'connect'])->name('spotify.connect');
