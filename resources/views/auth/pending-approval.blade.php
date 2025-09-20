@@ -12,6 +12,7 @@
             <p class="mb-4">{{ __('Thank you for registering! Your account has been created successfully.') }}</p>
             <p class="mb-4">{{ __('However, your account is currently pending admin approval. You will not be able to log in until an administrator has approved your account.') }}</p>
             <p>{{ __('Please wait for approval before attempting to log in. You will receive access once approved.') }}</p>
+	    <p>{{ __('Email tech@antelopelovefan.com with questions.') }}</p>
         </div>
 
         <div class="flex justify-center">
