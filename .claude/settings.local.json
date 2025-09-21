@@ -5,7 +5,14 @@
       "Bash(sail artisan make:migration:*)",
       "Bash(sail artisan make:job:*)",
       "Bash(sail artisan:*)",
-      "Bash(php artisan make:migration:*)"
+      "Bash(php artisan make:migration:*)",
+      "Bash(brew install:*)",
+      "Bash(bfg:*)",
+      "Bash(git reflog:*)",
+      "Bash(git gc:*)",
+      "Bash(git push:*)",
+      "Bash(git log:*)",
+      "Bash(git stash:*)"
     ],
     "deny": []
   }
